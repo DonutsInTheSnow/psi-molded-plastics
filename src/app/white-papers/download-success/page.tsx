@@ -10,17 +10,29 @@ export default async function DownloadSuccess({
   const { title } = await searchParams;
 
   if (!title) {
-    return <p>Missing white paper title.</p>;
+    return (
+      <div className="container mx-auto py-20 text-center">
+        <p className="text-xl text-red-600">Missing white paper title.</p>
+      </div>
+    );
   }
 
-  const { pdfUrl } = await client.fetch<{ pdfUrl: string }>(
-    `*[_type == "whitePaper" && title == $title][0]{ "pdfUrl": pdf.asset->url }`,
+  // Fetch the PDF URL using the exact title
+  const result = await client.fetch<{ pdfUrl: string } | null>(
+    `*[_type == "whitePaper" && title == $title][0]{
+      "pdfUrl": pdf.asset->url
+    }`,
     { title }
   );
 
-  if (pdfUrl) {
-    redirect(pdfUrl);
+  if (result?.pdfUrl) {
+    redirect(result.pdfUrl);  // ← this triggers the download
   }
 
-  return <p>Download starting…</p>;
+  // Fallback if something went wrong
+  return (
+    <div className="container mx-auto py-20 text-center">
+      <p className="text-xl">Could not start download. Please try again.</p>
+    </div>
+  );
 }
