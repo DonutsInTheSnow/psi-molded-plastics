@@ -92,19 +92,11 @@ export default function HubSpotForm({ whitePaperTitle }: { whitePaperTitle: stri
             input.value = whitePaperTitle;
             form.appendChild(input);
           },
-          onFormSubmit: () => {
-            setTimeout(() => {
-              const base =
-                process.env.NEXT_PUBLIC_SITE_URL ||
-                "https://psi-molded-plastics.vercel.app";
-
-              window.location.replace(
-                `${base}/white-papers/download-success?title=${encodeURIComponent(
-                  whitePaperTitle
-                )}`
-              );
-            }, 1000);
-          },
+          onFormSubmitted: () => {
+            const base = process.env.NEXT_PUBLIC_SITE_URL || "https://psi-molded-plastics.vercel.app";
+            window.location.href =
+                `${base}/white-papers/download-success?title=${encodeURIComponent(whitePaperTitle)}`;
+    },
         });
       }
     };
