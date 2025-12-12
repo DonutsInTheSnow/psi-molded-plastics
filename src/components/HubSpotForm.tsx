@@ -29,17 +29,24 @@ export default function HubSpotForm({ whitePaperTitle }: { whitePaperTitle: stri
     script.onload = () => {
       if (window.hbspt) {
         window.hbspt.forms.create({
-          region: "na2",
-          portalId: "244585148",
-          formId: "58637eec-9cae-4790-b9e7-e8cc4f60c182",
-          target: "#hubspot-form-container",
-          onFormSubmit: (form) => {
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "last_downloaded_white_paper";
-            input.value = whitePaperTitle;
-            form.appendChild(input);
-          },
+            region: "na2",
+            portalId: "244585148",
+            formId: "58637eec-9cae-4790-b9e7-e8cc4f60c182",
+            target: "#hubspot-form-container",
+            onFormSubmit: (form) => {
+                // 1. inject hidden field for HubSpot
+                const hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.name = "last_downloaded_white_paper";
+                hidden.value = whitePaperTitle;
+                form.appendChild(hidden);
+
+                // 2. after a tiny delay (HubSpot needs time to process), redirect
+                setTimeout(() => {
+                const url = `/white-papers/download-success?title=${encodeURIComponent(whitePaperTitle)}`;
+                window.location.href = url;
+                }, 300);
+            },
         });
       }
     };
