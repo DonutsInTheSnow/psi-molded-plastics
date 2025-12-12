@@ -33,17 +33,25 @@ export default function HubSpotForm({ whitePaperTitle }: { whitePaperTitle: stri
             portalId: "244585148",
             formId: "58637eec-9cae-4790-b9e7-e8cc4f60c182",
             target: "#hubspot-form-container",
-            onFormSubmit: () => {
-            // HubSpot needs a moment to finish processing
-            setTimeout(() => {
-                const url = `${
-                process.env.NEXT_PUBLIC_SITE_URL || "https://psi-molded-plastics.vercel.app"
-                }/white-papers/download-success?title=${encodeURIComponent(whitePaperTitle)}`;
-                window.location.replace(url);   // ← replace instead of href (cleaner)
-            }, 800);
-            },
-        });
-      }
+            onFormSubmit: (form) => {
+                const hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.name = "last_downloaded_white_paper";
+                hidden.value = whitePaperTitle;
+                form.appendChild(hidden);
+
+                // Fetch PDF URL client-side and redirect directly
+                fetch(`/api/whitepaper-pdf?title=${encodeURIComponent(whitePaperTitle)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                    if (data.pdfUrl) {
+                        window.location.href = data.pdfUrl;
+                    }
+                    })
+                    .catch(() => window.location.href = '/white-papers');  // fallback
+                },
+            });
+        }
     };
 
     return () => {
