@@ -1,113 +1,48 @@
-// // src/components/HubSpotForm.tsx
-// "use client";
-
-// import { useEffect } from "react";
-
-// declare global {
-//   interface Window {
-//     hbspt?: {
-//       forms: {
-//         create: (options: {
-//           region: string;
-//           portalId: string;
-//           formId: string;
-//           target: string;
-//           onFormReady?: (form: HTMLFormElement) => void;
-//           onFormSubmit?: () => void;
-//         }) => void;
-//       };
-//     };
-//   }
-// }
-
-// export default function HubSpotForm({ whitePaperTitle }: { whitePaperTitle: string }) {
-//   useEffect(() => {
-//     const script = document.createElement("script");
-//     script.src = "https://js.hsforms.net/forms/embed/v2.js";
-//     script.async = true;
-//     document.body.appendChild(script);
-
-//     script.onload = () => {
-//       if (window.hbspt?.forms) {
-//         window.hbspt.forms.create({
-//           region: "na2",
-//           portalId: "244585148",
-//           formId: "58637eec-9cae-4790-b9e7-e8cc4f60c182",
-//           target: "#hubspot-form-container",
-//           onFormReady: (form) => {
-//             const input = document.createElement("input");
-//             input.type = "hidden";
-//             input.name = "last_downloaded_white_paper";
-//             input.value = whitePaperTitle;
-//             form.appendChild(input);
-//           },
-//           onFormSubmit: () => {
-//             setTimeout(() => {
-//               const base = process.env.NEXT_PUBLIC_SITE_URL || "https://psi-molded-plastics.vercel.app";
-//               window.location.replace(
-//                 `${base}/white-papers/download-success?title=${encodeURIComponent(whitePaperTitle)}`
-//               );
-//             }, 1000);
-//           },
-//         });
-//       }
-//     };
-
-//     return () => script.remove();
-//   }, [whitePaperTitle]);
-
-//   return (
-//     <div className="max-w-lg mx-auto py-8">
-//       <div id="hubspot-form-container" />
-//     </div>
-//   );
-// }
-
-
-
-
-
+// src/components/HubSpotForm.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useState } from "react";
 
-export default function HubSpotForm({ whitePaperTitle }: { whitePaperTitle: string }) {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://js.hsforms.net/forms/embed/v2.js";
-    script.async = true;
-    document.body.appendChild(script);
+export default function HubSpotForm({ whitePaperTitle, pdfUrl }: { whitePaperTitle: string; pdfUrl: string }) {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    script.onload = () => {
-      if (window.hbspt?.forms) {
-        window.hbspt.forms.create({
-          region: "na2",
-          portalId: "244585148",
-          formId: "58637eec-9cae-4790-b9e7-e8cc4f60c182",
-          target: "#hubspot-form-container",
-          onFormReady: (form: HTMLFormElement) => {
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "last_downloaded_white_paper";
-            input.value = whitePaperTitle;
-            form.appendChild(input);
-          },
-          onFormSubmitted: () => {
-            const base = process.env.NEXT_PUBLIC_SITE_URL || "https://psi-molded-plastics.vercel.app";
-            window.location.href =
-                `${base}/white-papers/download-success?title=${encodeURIComponent(whitePaperTitle)}`;
-    },
-        });
-      }
-    };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
 
-    return () => script.remove();
-  }, [whitePaperTitle]);
+    setLoading(true);
+    const res = await fetch("/api/hubspot-lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, whitePaperTitle }),
+    });
+
+    if (res.ok) {
+      window.location.href = pdfUrl;  // instant download
+    } else {
+      alert("Something went wrong — try again.");
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="max-w-lg mx-auto py-8">
-      <div id="hubspot-form-container" />
-    </div>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
+      <input
+        type="email"
+        required
+        placeholder="Your work email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+      />
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-70"
+      >
+        {loading ? "Processing…" : "Download PDF"}
+      </button>
+    </form>
   );
 }
-

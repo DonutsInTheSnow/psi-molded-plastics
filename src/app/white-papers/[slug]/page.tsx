@@ -31,7 +31,10 @@ export default async function WhitePaperPage({ params }: { params: Promise<{ slu
         )}
 
         <div className="mt-16">
-          <HubSpotForm whitePaperTitle={whitepaper.title} />
+          <HubSpotForm
+            whitePaperTitle={whitepaper.title}
+            pdfUrl={whitepaper.pdfUrl || ""}
+          />
         </div>
 
         {/* Optional: auto-download after HubSpot success */}
