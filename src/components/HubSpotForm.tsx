@@ -23,7 +23,7 @@ declare global {
 export default function HubSpotForm({ whitePaperTitle }: { whitePaperTitle: string }) {
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://js.hsforms.net/forms/embed/v2.js";
+    script.src = "https://js.hsforms.net/forms/embed/v3.js";
     script.async = true;
     document.body.appendChild(script);
 
