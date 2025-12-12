@@ -45,7 +45,7 @@ export default function HubSpotForm({ whitePaperTitle }: { whitePaperTitle: stri
                 setTimeout(() => {
                 const url = `/white-papers/download-success?title=${encodeURIComponent(whitePaperTitle)}`;
                 window.location.href = url;
-                }, 300);
+                }, 1000);
             },
         });
       }
