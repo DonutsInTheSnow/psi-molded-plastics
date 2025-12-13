@@ -38,8 +38,8 @@ export default async function WhitePaperPage({ params }: { params: Promise<{ slu
         </div>
 
         {/* Optional: auto-download after HubSpot success */}
-        <p className="mt-8 text-sm text-gray-500">
-          The PDF will download automatically after you submit the form.
+        <p className="mt-8 text-sm text-gray-700">
+          The PDF will be available after you enter your email.
         </p>
       </div>
     </section>

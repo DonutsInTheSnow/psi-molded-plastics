@@ -223,10 +223,10 @@ export default function Header() {
                   </span>
                 </summary>
                 <ul className="pl-6 mt-2 space-y-3">
-                  <li><Link href="/blog" onClick={() => setIsOpen(false)} className={`block py-1 ${isActive("/blog")}`}>Blog</Link></li>
+                  <li><Link href="/psi-blog" onClick={() => setIsOpen(false)} className={`block py-1 ${isActive("/blog")}`}>PSI Blog</Link></li>
                   <li><Link href="/careers" onClick={() => setIsOpen(false)} className={`block py-1 ${isActive("/careers")}`}>Careers</Link></li>
                   <li><Link href="/#markets" onClick={() => setIsOpen(false)} className="block py-1 hover:text-[#015a9c]">Markets</Link></li>
-                  <li><Link href="/resources" onClick={() => setIsOpen(false)} className={`block py-1 ${isActive("/resources")}`}>Resources</Link></li>
+                  <li><Link href="/white-papers" onClick={() => setIsOpen(false)} className={`block py-1 ${isActive("/resources")}`}>White Papers</Link></li>
                 </ul>
               </details>
             </li>

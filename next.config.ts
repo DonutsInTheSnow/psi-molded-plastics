@@ -4,14 +4,6 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      // Existing Supabase storage images
-      {
-        protocol: 'https',
-        hostname: 'dqnwxrsghenfcrxvgetp.supabase.co',
-        port: '',
-        pathname: '/storage/v1/object/public/**',
-      },
-
       // New: Sanity CDN images
       {
         protocol: 'https',

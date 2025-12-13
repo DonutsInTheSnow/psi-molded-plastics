@@ -4,6 +4,9 @@
 import { useState } from "react";
 
 export default function HubSpotForm({ whitePaperTitle, pdfUrl }: { whitePaperTitle: string; pdfUrl: string }) {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +18,13 @@ export default function HubSpotForm({ whitePaperTitle, pdfUrl }: { whitePaperTit
     const res = await fetch("/api/hubspot-lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, whitePaperTitle }),
+      body: JSON.stringify({
+        email,
+        whitePaperTitle,
+        firstName: firstName || undefined,
+        lastName: lastName || undefined,
+        companyName: companyName || undefined,
+      }),
     });
 
     if (res.ok) {
@@ -28,14 +37,40 @@ export default function HubSpotForm({ whitePaperTitle, pdfUrl }: { whitePaperTit
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <input
+          type="text"
+          placeholder="First name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="w-full px-4 py-3 text-amber-900 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <input
+          type="text"
+          placeholder="Last name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          className="w-full px-4 py-3 text-amber-900 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+      </div>
+
+      <input
+        type="text"
+        placeholder="Company"
+        value={companyName}
+        onChange={(e) => setCompanyName(e.target.value)}
+        className="w-full px-4 py-3 text-amber-900 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+      />
+
       <input
         type="email"
         required
         placeholder="Your work email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        className="w-full px-4 py-3 text-amber-900 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
       />
+
       <button
         type="submit"
         disabled={loading}
